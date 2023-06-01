@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
-const notesSchema = new Schema({
-  tile: {
+const notesSchema = new mongoose.Schema({
+  user:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"user"
+  },
+  title: {
     type: String,
     required: true,
   },
@@ -22,4 +26,4 @@ const notesSchema = new Schema({
 
 const Notes = mongoose.model("notes", notesSchema);
 
-module.exports = Notes;
+export default Notes;
