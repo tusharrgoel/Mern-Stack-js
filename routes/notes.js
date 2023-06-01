@@ -7,7 +7,7 @@ import { body, validationResult } from "express-validator";
 router.get("/fetchallnotes", fetchUser, async (req, res) => {
   try {
     const notes = await Notes.find({ user: req.user.id });
-    res.json(notes);
+    res.json({"Suceess":"Fetched Notes", note:notes});
   } catch (error) {
     res.stauts(404).json({ error: error.message });
   }
@@ -59,10 +59,10 @@ router.put("/updatenote/:id", fetchUser, async (req, res) => {
 
     let noteExist = await Notes.findById(req.params.id);
     if (!noteExist) {
-      return res.status(404).send("Not Found");
+      return res.status(404).send("Note Not Found");
     }
     if (noteExist.user.toString() !== req.user.id) {
-      return res.status(401).send("Not Allowed");
+      return res.status(401).send("Not Allowed to this user");
     }
     noteExist = await Notes.findByIdAndUpdate(
       req.params.id,
@@ -81,10 +81,10 @@ router.delete("/deletenote/:id", fetchUser, async (req, res) => {
   try {
     let noteExist = await Notes.findById(req.params.id);
     if (!noteExist) {
-      return res.status(404).send("Not Found");
+      return res.status(404).send("Not Found to delete a note");
     }
     if (noteExist.user.toString() !== req.user.id) {
-      return res.status(401).send("Not Allowed");
+      return res.status(401).send("Not Allowed to the current user to delete");
     }
     noteExist = await Notes.findByIdAndDelete(req.params.id);
     res.json({ Success: "Note deleted successfully", note: noteExist });
